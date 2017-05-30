@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-// var request = require("request");
+var request = require("request");
 var querystring = require('querystring');
 var url = require('url');
 var limit = require("simple-rate-limiter");
