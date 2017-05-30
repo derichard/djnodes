@@ -62,16 +62,16 @@ function hasAuthZtoken(req, res, next) {
     }
 }
 
-router.get('/', hasAuthNtoken, hasAuthZtoken, function(req, res, next) {
-    res.render('test');
-});
-
 // router.get('/', hasAuthNtoken, hasAuthZtoken, function(req, res, next) {
-//     res.render('index', {
-//         page_name: 'index',
-//         title: "DJ Nodes"
-//     });
+//     res.render('test');
 // });
+
+router.get('/', hasAuthNtoken, hasAuthZtoken, function(req, res, next) {
+    res.render('index', {
+        page_name: 'index',
+        title: "DJ Nodes"
+    });
+});
 
 router.get("/login", function(req, res, next) {
     res.render("login", {
