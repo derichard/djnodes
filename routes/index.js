@@ -45,7 +45,8 @@ function hasAuthZtoken(req, res, next) {
                 client_id: process.env.CLIENT_ID,
                 scope: "openid pib",
                 grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-                redirect_uri: "http://localhost:8000/"
+                // redirect_uri: "http://localhost:8000/"
+                redirect_uri: "https://djnodes.herokuapp.com/"
                 }
             }, (e, r, authZbody) => {
                 if (e || r.statusCode !== 200) {

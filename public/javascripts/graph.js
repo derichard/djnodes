@@ -717,8 +717,7 @@ function searchOrganizationByName(organization, type, offset) {
     };
     // console.log("search:", search);
 
-    return $.getJSON("/api/search/organizations", search) {
-        })
+    $.getJSON("/api/search/organizations", search)
         .then( (apiData) => {
             console.log("success:", apiData);
             var resultsCount = parseInt( $("#resultsCount").text() );
