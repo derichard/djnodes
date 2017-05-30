@@ -85,7 +85,8 @@ router.post("/login", function(req, res, next) {
     var qs = {
         scope: "openid given_name family_name email",
         response_type: "code",
-        redirect_uri: "http://localhost:8000/callback",
+        // redirect_uri: "http://localhost:8000/callback",
+        redirect_uri: "https://djnodes.herokuapp.com/callback",
         connection: "dj-oauth",
         client_id: client_id
     }
@@ -113,7 +114,8 @@ router.get("/callback*", function(req, res, next) {
             code: code,
             client_id: client_id,
             client_secret: client_secret,
-            redirect_uri: "http://localhost:8000/"
+            // redirect_uri: "http://localhost:8000/"
+            redirect_uri: "https://djnodes.herokuapp.com"
             }
         }, (e, r, authNbody) => {
             if (e || r.statusCode !== 200) {
