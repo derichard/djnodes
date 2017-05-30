@@ -1,0 +1,23 @@
+<nav class="navbar navbar-inverted bg-faded">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#myNavbar" aria-controls="navbar" aria-expanded="false">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="/">DJ Nodes</a>
+  </div>
+
+  <div class="collapse navbar-collapse" id="myNavbar">
+    <ul class="nav navbar-nav navbar-left mr-auto">
+      <li <% if (page_name == 'index') { %> class="active" <% } %> ><a href="/">/</a></li>
+      <li <% if (page_name == 'graph') { %>class="active" <% } %>><a href="/graph">graph</a></li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right">
+        <!-- <li id="loginNavBtn"><a href="/login"><span class="glyphicon glyphicon-log-in"></span></a></li> -->
+        <li><a href="/logout"><span class="glyphicon glyphicon-log-out"></span></a></li>
+    </ul>
+  </div>
+</nav>
