@@ -96,6 +96,7 @@ var cy = cytoscape({
         {
             data: {
                 id: 'a',
+                type: "intro",
                 level: 0,
                 bg: "#00b3b3"
             }
@@ -103,6 +104,7 @@ var cy = cytoscape({
         {
             data: {
                 id: 'b',
+                type: "intro",
                 level: 0,
                 bg: "#ff6600"
             }
@@ -110,6 +112,7 @@ var cy = cytoscape({
         {
             data: {
                 id: 'c',
+                type: "intro",
                 level: 0,
                 bg: "#1a8cff"
             }
@@ -144,7 +147,6 @@ var cy = cytoscape({
                     return 20 - 2 * node.data("level");
                 },
                 "label": "data(name)",
-                // 'background-color': '#6495ed'
                 "background-color": "data(bg)"
             }
         },
@@ -160,33 +162,6 @@ var cy = cytoscape({
         }
     ]
 });
-
-var gridLayout = {
-    name: 'grid',
-
-    fit: true, // whether to fit the viewport to the graph
-    padding: 30, // padding used on fit
-    boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
-    avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
-    avoidOverlapPadding: 10, // extra spacing around nodes when avoidOverlap: true
-    nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
-    spacingFactor: undefined, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
-    condense: false, // uses all available space on false, uses minimal space on true
-    rows: undefined, // force num of rows in the grid
-    cols: undefined, // force num of columns in the grid
-    position: function( node ){}, // returns { row, col } for element
-    sort: undefined, // a sorting function to order the nodes; e.g. function(a, b){ return a.data('weight') - b.data('weight') }
-    animate: false, // whether to transition the node positions
-    animationDuration: 500, // duration of animation in ms if enabled
-    animationEasing: undefined, // easing of animation if enabled
-    ready: $('#graphSpinner').hide(), // callback on layoutready
-    stop: $('#graphSpinner').hide() // callback on layoutstop
-};
-
-var bilkentLayout = {
-    name: 'cose-bilkent',
-    animate: false
-};
 
 var coseLayout = {
     name: 'cose',
@@ -209,11 +184,11 @@ var coseLayout = {
     // Constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
     boundingBox: undefined,
     // Excludes the label when calculating node bounding boxes for the layout algorithm
-    nodeDimensionsIncludeLabels: true,
+    nodeDimensionsIncludeLabels: false,
     // Randomize the initial positions of the nodes (true) or use existing positions (false)
     randomize: false,
     // Extra spacing between components in non-compound graphs
-    componentSpacing: 100,
+    componentSpacing: 10,
     // Node repulsion (non overlapping) multiplier
     nodeRepulsion: function( node ){ return 400000; },
     // Node repulsion (overlapping) multiplier
@@ -236,6 +211,28 @@ var coseLayout = {
     minTemp: 1.0,
     // Pass a reference to weaver to use threads for calculations
     weaver: false
+};
+
+var gridLayout = {
+    name: 'grid',
+
+    fit: true, // whether to fit the viewport to the graph
+    padding: 30, // padding used on fit
+    boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
+    avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
+    avoidOverlapPadding: 10, // extra spacing around nodes when avoidOverlap: true
+    nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
+    spacingFactor: undefined, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
+    condense: false, // uses all available space on false, uses minimal space on true
+    rows: undefined, // force num of rows in the grid
+    cols: undefined, // force num of columns in the grid
+    position: function( node ){}, // returns { row, col } for element
+    sort: undefined, // a sorting function to order the nodes; e.g. function(a, b){ return a.data('weight') - b.data('weight') }
+    animate: false, // whether to transition the node positions
+    animationDuration: 500, // duration of animation in ms if enabled
+    animationEasing: undefined, // easing of animation if enabled
+    ready: $('#graphSpinner').hide(), // callback on layoutready
+    stop: $('#graphSpinner').hide() // callback on layoutstop
 };
 
 var concentricLayout = {
@@ -264,6 +261,54 @@ var concentricLayout = {
     animationEasing: undefined, // easing of animation if enabled
     ready: $('#graphSpinner').hide(), // callback on layoutready
     stop: $('#graphSpinner').hide() // callback on layoutstop
+};
+
+var coseBilkentLayout = {
+    name: "cose-bilkent",
+  // Called on `layoutready`
+  ready: function () {
+      $('#graphSpinner').hide();
+  },
+  // Called on `layoutstop`
+  stop: function () {
+      $('#graphSpinner').hide();
+  },
+  // number of ticks per frame; higher is faster but more jerky
+  refresh: 30,
+  // Whether to fit the network view after when done
+  fit: true,
+  // Padding on fit
+  padding: 20,
+  // Padding for compounds
+  paddingCompound: 5,
+  // Whether to enable incremental mode
+  randomize: true,
+  // Node repulsion (non overlapping) multiplier
+  nodeRepulsion: 4500,
+  // Ideal edge (non nested) length
+  idealEdgeLength: 50,
+  // Divisor to compute edge forces
+  edgeElasticity: 0.45,
+  // Nesting factor (multiplier) to compute ideal edge length for nested edges
+  nestingFactor: 0.1,
+  // Gravity force (constant)
+  gravity: 0.25,
+  // Maximum number of iterations to perform
+  numIter: 2500,
+  // For enabling tiling
+  tile: true,
+  // Type of layout animation. The option set is {'during', 'end', false}
+  animate: 'end',
+  // Represents the amount of the vertical space to put between the zero degree members during the tiling operation(can also be a function)
+  tilingPaddingVertical: 10,
+  // Represents the amount of the horizontal space to put between the zero degree members during the tiling operation(can also be a function)
+  tilingPaddingHorizontal: 10,
+  // Gravity range (constant) for compounds
+  gravityRangeCompound: 1.5,
+  // Gravity force (constant) for compounds
+  gravityCompound: 1.0,
+  // Gravity range (constant)
+  gravityRange: 3.8
 };
 
 function qtipText(node) {
@@ -350,7 +395,8 @@ function qtipText(node) {
 
         case "rounds":
             var typeShow = tagText("Round", "p");
-            if (typeof nodeData.attributes.currency.code == "undefined" ||
+            if (typeof nodeData.attributes.currency == "undefined" ||
+                typeof nodeData.attributes.currency.code == "undefined" ||
                 typeof nodeData.attributes.amount == "undefined") {
                 var amount = "";
             } else {
@@ -376,8 +422,8 @@ function extractLinks(apiObj) {
 }
 
 //converts apiObj "data" to CyEle object
-function apiObjToCyEle(apiObj, level) {
-    console.log("apiObjToCyEle:", apiObj);
+function apiObjToCyEle(apiObj, level, sourceId) {
+    // console.log("apiObjToCyEle:", apiObj);
     if (apiObj.links == undefined) {
         apiObj.links = {
             self : null
@@ -395,8 +441,8 @@ function apiObjToCyEle(apiObj, level) {
             fullProfile: apiObj
         },
         position: {
-            x: -1000 * level,
-            y: -1000 * level
+            x: 1,
+            y: 1
         }
     };
     switch (apiObj.type) {
@@ -432,11 +478,12 @@ function apiObjToCyEle(apiObj, level) {
             break;
 
         case "rounds":
+            eleObj.data.parent = sourceId;
             eleObj.data.name = apiObj.attributes.round_type.description;
             eleObj.data.bg = "#000d1a"
             break;
     }
-    console.log("eleObj after:", eleObj);
+    // console.log("eleObj after:", eleObj);
     return eleObj;
 }
 
@@ -520,13 +567,14 @@ function getTargets(targetLinks, filter) {
 //source: source node, targets: array of apiObjs
 function addToGraph(source, targets, level) {
     var sourceId = source.id();
-    // console.log("sourceId:", sourceId);
+    console.log("sourceId:", sourceId);
     cy.batch(function() {
         targets.forEach( (target) => {
+            console.log("target:", target);
             if (cy.$id(target.id).empty()) {
                 // console.log("addToGraph target:", target);
                 // console.log("addToGraph apiObjToCyEle:", apiObjToCyEle(target, level + 1) );
-                cy.add(apiObjToCyEle(target, level + 1));
+                cy.add(apiObjToCyEle(target, level + 1, sourceId));
             }
             if ( cy.$id(sourceId + "-" + target.id).empty() &&
                     cy.$id(target.id + "-" + sourceId).empty() ) {
@@ -536,10 +584,16 @@ function addToGraph(source, targets, level) {
                          source: target.id,
                          target: sourceId
                      },
-                     selectable: true
+                     selectable: false
                  });
             }
         });
+    });
+}
+
+function getTargetPromises(sources, options) {
+    return sources.map( function(source) {
+        return getTargets(source.data("relations"), options.filter);
     });
 }
 
@@ -548,19 +602,20 @@ function addNodesByLevel(level, options) {
     var quit = false;
     if (level < options.maxLevel && !quit) {
         var sources = cy.nodes().filter("[level = " + level + "]");
-        sources.forEach( (source) => {
-            // console.log("source:", source);
-            var targetPromises = getTargets(source.data("relations"), options.filter)
-                .then( (targets) => {
-                    addToGraph(source, targets, level);
-                    console.log("success adding level", level);
-                    addNodesByLevel(level + 1, options);
-                    })
-                .catch( (error) => {
-                    console.log("Error addNodes getTargets", error);
-                });
-        });
-        quit = true;
+        var targetPromises = getTargetPromises(sources, options);
+        Promise.all(targetPromises)
+            .then( (targets) => {
+                for (var i = 0; i < sources.length; i++) {
+                    addToGraph(sources[i], targets[i], level);
+                    // cy.layout(options.layout).run();
+                }
+                console.log("success adding level", level);
+                addNodesByLevel(level + 1, options);
+            })
+            .catch( (error) => {
+                console.log("Error addNodes getTargets", error);
+                quit = true;
+            });
     } else {
         console.log("addNodesByLevel complete");
         cy.resize();
@@ -585,6 +640,47 @@ function addNodesByLevel(level, options) {
     }
 }
 
+function addNodesBySource(source, options) {
+    var targetPromises = getTargetPromises([source], options);
+    var level = source.data("level");
+
+    Promise.all(targetPromises)
+        .then( (targets) => {
+            addToGraph(source, targets[0], level);
+            // console.log("source:", source);
+            // console.log("targets:", targets);
+            // cy.resize();
+            var layout = cy.layout(options.layout);
+            layout.one("layoutstop", function(evt) {
+                cy.zoom({
+                    level: 1.2,
+                    position: source.position()
+                });
+            });
+            layout.run();
+            cy.nodes().forEach(function(ele) {
+                ele.qtip({
+                    content: {
+                        text: qtipText(ele),
+                        title: ele.data('name')
+                    },
+                    style: {
+                        classes: 'qtip-bootstrap'
+                    },
+                    position: {
+                        my: 'bottom center',
+                        at: 'top center',
+                        target: ele
+                    }
+                });
+            });
+            $('#graphSpinner').hide();
+        })
+        .catch( (error) => {
+            console.log("Error addNodesBySource", error);
+        });
+}
+
 function searchPeopleByName(formData, offset) {
     var search = {
         firstName: formData.firstName,
@@ -606,13 +702,13 @@ function searchPeopleByName(formData, offset) {
                 var linkSelf = person.links.self;
                 table.cell("#" + person.id, ".self").data(linkSelf);
 
-                // getObjByLink(linkSelf)
-                //     .then( (apiData) => {
-                //         table.cell("#" + person.id, ".description").data(apiData.data.attributes.biography);
-                //     })
-                //     .catch( (error) => {
-                //         console.log("error:", error);
-                //     });
+                getObjByLink(linkSelf)
+                    .then( (apiData) => {
+                        table.cell("#" + person.id, ".description").data(apiData.data.attributes.biography);
+                    })
+                    .catch( (error) => {
+                        console.log("error:", error);
+                    });
 
                 // var company_names = "";
                 // var linkRelations = person.relationships.organizations.links.related
@@ -646,69 +742,68 @@ function searchPeopleByName(formData, offset) {
         });
 }
 
+function getInfo(apiObj) {
+    // console.log("org:", apiObj);
+    switch (apiObj.type) {
+        case "portfolio-companies":
+            var entity = apiObj.attributes.name.company_name;
+            if (apiObj.attributes.name.alternate_names) {
+                entity += "(" + apiObj.attributes.name.alternate_names.familiar + ")";
+            }
+            return {
+                entity: entity,
+                description: apiObj.attributes.description
+            };
+            break;
+
+        case "investors":
+            var entity = apiObj.attributes.name.company_name;
+            if (apiObj.attributes.name.alternate_names) {
+                entity += " (" + apiObj.attributes.name.alternate_names.familiar + ")";
+            }
+            return {
+                entity: entity,
+                description: apiObj.attributes.description
+            };
+            break;
+
+        case "service-providers":
+            var entity = apiObj.attributes.name.company_name;
+            if (apiObj.attributes.name.alternate_names) {
+                entity += "(" + apiObj.attributes.name.alternate_names.familiar + ")";
+            }
+            return {
+                entity: entity,
+                description: ""
+            };
+            break;
+
+        case "funds":
+            var entity = apiObj.attributes.name.company_name;
+            if (apiObj.attributes.name.alternate_names) {
+                entity += "(" + apiObj.attributes.name.alternate_names.familiar + ")";
+            }
+            return {
+                entity: entity,
+                description: ""
+            };
+            break;
+
+        case "limited-partners":
+            var entity = apiObj.attributes.name.company_name;
+            if (apiObj.attributes.name.alternate_names) {
+                entity += "(" + apiObj.attributes.name.alternate_names.familiar + ")";
+            }
+            return {
+                entity: entity,
+                description: ""
+            };
+            break;
+    }
+}
+
 function searchOrganizationByName(organization, type, offset) {
     console.log("searchOrgByName:", organization, type, offset);
-
-    function getInfo(apiObj) {
-        // console.log("org:", apiObj);
-        switch (apiObj.type) {
-            case "portfolio-companies":
-                var entity = apiObj.attributes.name.company_name;
-                if (apiObj.attributes.name.alternate_names) {
-                    entity += "(" + apiObj.attributes.name.alternate_names.familiar + ")";
-                }
-                return {
-                    entity: entity,
-                    description: apiObj.attributes.description
-                };
-                break;
-
-            case "investors":
-                var entity = apiObj.attributes.name.company_name;
-                if (apiObj.attributes.name.alternate_names) {
-                    entity += " (" + apiObj.attributes.name.alternate_names.familiar + ")";
-                }
-                return {
-                    entity: entity,
-                    description: apiObj.attributes.description
-                };
-                break;
-
-            case "service-providers":
-                var entity = apiObj.attributes.name.company_name;
-                if (apiObj.attributes.name.alternate_names) {
-                    entity += "(" + apiObj.attributes.name.alternate_names.familiar + ")";
-                }
-                return {
-                    entity: entity,
-                    description: ""
-                };
-                break;
-
-            case "funds":
-                var entity = apiObj.attributes.name.company_name;
-                if (apiObj.attributes.name.alternate_names) {
-                    entity += "(" + apiObj.attributes.name.alternate_names.familiar + ")";
-                }
-                return {
-                    entity: entity,
-                    description: ""
-                };
-                break;
-
-            case "limited-partners":
-                var entity = apiObj.attributes.name.company_name;
-                if (apiObj.attributes.name.alternate_names) {
-                    entity += "(" + apiObj.attributes.name.alternate_names.familiar + ")";
-                }
-                return {
-                    entity: entity,
-                    description: ""
-                };
-                break;
-        }
-        console.log("after switch");
-    }
 
     var search = {
         organization: organization,
@@ -717,11 +812,12 @@ function searchOrganizationByName(organization, type, offset) {
     };
     // console.log("search:", search);
 
-    $.getJSON("/api/search/organizations", search)
+    return $.getJSON("/api/search/organizations", search)
         .then( (apiData) => {
             console.log("success:", apiData);
             var resultsCount = parseInt( $("#resultsCount").text() );
-            $("#resultsCount").text(apiData.meta.total_count + resultsCount + " result(s)");
+            console.log(resultsCount);
+            $("#resultsCount").text(apiData.meta.count + resultsCount + " result(s)");
             apiData.data.forEach( (org) => {
                 if (table.rows("#" + org.id).any()) {
                     console.log("row exists");
@@ -734,19 +830,13 @@ function searchOrganizationByName(organization, type, offset) {
                     table.row.add(org);
                     tableData[org.id] = org;
                 }
-            console.log(apiData);
-            console.log("offset:", apiData.meta.offset.next, offset);
-            console.log("meta:", apiData.meta.offset);
+            });
             if (apiData.meta.offset.next > 0) {
-                console.log("if");
-
-                searchOrganizationByName(organization, type, apiData.meta.offset.next);
+                searchOrganizationByName(search.organization, search.type, apiData.meta.offset.next);
             } else {
-                console.log("else");
                 $('#tableSpinner').hide();
                 table.draw();
             }
-            });
             table.draw();
         })
         .catch( (error) => {
@@ -754,9 +844,7 @@ function searchOrganizationByName(organization, type, offset) {
         });
 }
 
-//todo: search for more with offset
 $("#searchForm").on("submit", function() {
-    // table.clear().draw();
     var formData = {
         firstName: $("#firstName").val(),
         lastName: $("#lastName").val(),
@@ -790,18 +878,16 @@ $("#searchForm").on("submit", function() {
     } else {
         var organizationTypes = ["portfolioCompanies", "investors", "serviceProviders",
             "funds", "limitedPartners"];
-        $("#resultsCount").text();
+        $("#resultsCount").text("0");
         organizationTypes.forEach( (type) => {
             if (formData[type]) {
                 console.log("type:", type);
                 searchOrganizationByName(formData.organization, type, 0);
             }
         });
-        table.draw();
+        // table.draw();
     }
 });
-
-
 
 $("#graphBtn, #reGraphBtn").on("click", function() {
     var targets = [];
@@ -824,7 +910,7 @@ $("#graphBtn, #reGraphBtn").on("click", function() {
     }, 2000);
     console.log(targets);
     var options = {
-        maxLevel: 2,
+        maxLevel: $("#maxLevel").val(),
         layout: coseLayout,
         filter: {
             organizations: true,
@@ -851,6 +937,35 @@ $("#graphBtn, #reGraphBtn").on("click", function() {
             console.log(error);
         }
     }
+});
+
+cy.nodes().on('tap', function(evt){
+    if ( !$("#chkOnTheGo").is(":checked") ) {
+        return false;
+    }
+    console.log(evt.target);
+    if (evt.target.data("type") == "intro") {
+        return false;
+    }
+    // console.log( 'tap ' + evt.target.id() );
+    var source = evt.target;
+    // console.log(source);
+    var options = {
+        maxLevel: 1,
+        layout: coseLayout,
+        filter: {
+            organizations: true,
+            portfolio_companies: $("#chkGraphCompanies").is(':checked'),
+            investors: $("#chkGraphInvestors").is(':checked'),
+            executives: $("#chkGraphExecutives").is(':checked'),
+            service_providers: $("#chkGraphSP").is(':checked'),
+            limited_partners: $("#chkGraphLP").is(':checked'),
+            funds: $("#chkGraphFunds").is(':checked'),
+            rounds: $("#chkGraphRounds").is(':checked')
+        }
+    };
+    $('#graphSpinner').show();
+    addNodesBySource(source, options);
 });
 
 
@@ -898,12 +1013,13 @@ $("#centerBtn").on("click", function() {
     cy.center();
 });
 
-$("#centerBtn").on("click", function() {
+$("#fitBtn").on("click", function() {
     cy.fit();
 });
 
 $("#layoutCoseBtn").on("click", function() {
     cy.layout(coseLayout).run();
+    cy.center();
 });
 
 $("#layoutGridBtn").on("click", function() {
@@ -916,6 +1032,11 @@ $("#layoutConcentricBtn").on("click", function() {
     cy.center();
 });
 
+$("#layoutCoseBilkentBtn").on("click", function() {
+    cy.layout(coseBilkentLayout).run();
+    cy.center();
+});
+
 $("#results tbody").on("click", "tr", function() {
     if ($(this).hasClass('selectedRow')) {
         $(this).removeClass('selectedRow');
@@ -923,5 +1044,20 @@ $("#results tbody").on("click", "tr", function() {
         $(this).addClass('selectedRow');
     }
 });
+
+$(".btn-control").on("click", function() {
+    var action = $(this).attr('data-action');
+    var value  = parseInt( $("#maxLevel").val() );
+    var min = parseInt( $("#maxLevel").attr("min") );
+    var max = parseInt ( $("#maxLevel").attr("max") );
+    if ( action == "plus" && value < max ) {
+        value++;
+    }
+    if ( action == "minus"  && value > min ) {
+        value--;
+    }
+    $("#maxLevel").val(value);
+});
+
 
 });

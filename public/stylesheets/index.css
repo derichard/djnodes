@@ -4,6 +4,11 @@ body {
     margin-bottom: 20px;
 }
 
+#welcomePanel p, #welcomePanel li {
+    margin: 20px;
+    font-size: 18px;
+}
+
 #loginBtn {
     margin: 20px;
 }
@@ -136,6 +141,8 @@ button {
     /*background-color: #23527c;*/
 }
 
+
+
 #cy {
     width: 90%;
     height: 700px;
@@ -144,19 +151,28 @@ button {
     margin: 20px auto;
     border: 1px solid black;
 }
-#graphBtnRow {
-    /*margin-left: 20px;*/
-    /*float: none;
+
+/*#graphBtnRow {
+    width: 300px;
+    float: none;
     display: block;
     margin-left: auto;
-    margin-right: auto;*/
+    margin-right: auto;
+}*/
+
+/*#maxLevel {
+    display: inline !important;
+}*/
+
+#levelBtn {
+    width: 120px !important;
 }
 
 .dropdown-inline {
     display:inline-block;
 }
 
-#tableSpinner, #graphSpinner {
+#tableSpinner {
     display: none;
     position: relative;
     z-index: 999;
@@ -170,7 +186,7 @@ button {
     right: 0;
 }
 
-#graphSpinner, #graphSpinner {
+#graphSpinner {
     display: none;
     position: relative;
     z-index: 999;
@@ -188,6 +204,7 @@ footer {
     position: fixed;
     color: #02A3D5 !important;
     text-align: right !important;
+    z-index: 999;
     right: 0px;
     color: white;
     bottom: 0px;

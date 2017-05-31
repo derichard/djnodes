@@ -3,10 +3,8 @@ var router = express.Router();
 var request = require("request");
 var querystring = require('querystring');
 var url = require('url');
-var limit = require("simple-rate-limiter");
+// var limit = require("simple-rate-limiter");
 // var request = limit(require("request")).to(10).per(1000);
-// var RateLimiter = require('limiter').RateLimiter;
-// var limiter = new RateLimiter(150, 'hour');
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
@@ -162,7 +160,7 @@ router.get("/api/search/people*", hasAuthNtoken, hasAuthZtoken, function(req, re
                     "taxonomy_type": "VentureSource",
                     "paging": {
                         "offset": search.offset,
-                        "limit": 50
+                        "limit": 100
                     },
                     "sort": "LastName",
                     "filters": {
@@ -205,7 +203,7 @@ router.get("/api/search/organizations*", hasAuthNtoken, hasAuthZtoken, function(
             "taxonomy_type": "VentureSource",
             "paging": {
                 "offset": search.offset,
-                "limit": 50
+                "limit": 100
             }
         }
     };
