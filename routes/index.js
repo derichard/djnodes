@@ -13,9 +13,9 @@ function hasAuthNtoken(req, res, next) {
     // console.log("starting hasAuthNtoken function");
     var sess = req.session;
     // console.log("sess:", sess);
-    // sess.authNtoken = {
-    //     id_token: process.env.authN
-    //     };
+    sess.authNtoken = {
+        id_token: process.env.authN
+        };
     if (sess.authNtoken !== undefined) {
         return next();
     } else {
@@ -27,9 +27,9 @@ function hasAuthZtoken(req, res, next) {
     // console.log("starting hasauthZtoken function");
     var sess = req.session;
     // console.log("sess:", sess);
-    // sess.authZtoken = {
-    //     id_token: process.env.id_token
-    //     };
+    sess.authZtoken = {
+        id_token: process.env.id_token
+        };
     //console.log(sess.authZtoken.id_token)
     if (sess.authZtoken !== undefined) {
         return next();
@@ -43,8 +43,8 @@ function hasAuthZtoken(req, res, next) {
                 client_id: process.env.CLIENT_ID,
                 scope: "openid pib",
                 grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-                // redirect_uri: "http://localhost:8000/"
-                redirect_uri: "https://djnodes.herokuapp.com/"
+                redirect_uri: "http://localhost:8000/"
+                // redirect_uri: "https://djnodes.herokuapp.com/"
                 }
             }, (e, r, authZbody) => {
                 if (e || r.statusCode !== 200) {
@@ -84,8 +84,8 @@ router.post("/login", function(req, res, next) {
     var qs = {
         scope: "openid given_name family_name email",
         response_type: "code",
-        // redirect_uri: "http://localhost:8000/callback",
-        redirect_uri: "https://djnodes.herokuapp.com/callback",
+        redirect_uri: "http://localhost:8000/callback",
+        // redirect_uri: "https://djnodes.herokuapp.com/callback",
         connection: "dj-oauth",
         client_id: client_id
     }
@@ -113,8 +113,8 @@ router.get("/callback*", function(req, res, next) {
             code: code,
             client_id: client_id,
             client_secret: client_secret,
-            // redirect_uri: "http://localhost:8000/"
-            redirect_uri: "https://djnodes.herokuapp.com"
+            redirect_uri: "http://localhost:8000/"
+            // redirect_uri: "https://djnodes.herokuapp.com"
             }
         }, (e, r, authNbody) => {
             if (e || r.statusCode !== 200) {

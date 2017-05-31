@@ -4,7 +4,7 @@ body {
     margin-bottom: 20px;
 }
 
-#welcomePanel p, #welcomePanel li {
+#welcomePanel p, #welcomePanel li, #infoPanel p {
     margin: 20px;
     font-size: 18px;
 }
@@ -84,9 +84,11 @@ input[type="submit"] {
     color: red;
 }
 
-#result_container {
+#resultContainer {
     margin-top: 20px;
     margin-left: 10px;
+    margin-right: 10px;
+    /*width: 70%;*/
     /*width: 700px;*/
 }
 
@@ -120,6 +122,7 @@ a.toggle {
 #tableBtn {
     float: right;
     margin-right: 20px;
+    margin-top: 20px;
 }
 
 #result_container {
@@ -136,8 +139,9 @@ button {
 }
 
 #graphBtn {
-    width: 200px;
-    margin-bottom: 10px;
+    width: 220px;
+    margin-left: 10px;
+    margin-top: 10px;
     /*background-color: #23527c;*/
 }
 
@@ -145,7 +149,7 @@ button {
 
 #cy {
     width: 90%;
-    height: 700px;
+    height: 650px;
     display: block;
     background-color: white;
     margin: 20px auto;

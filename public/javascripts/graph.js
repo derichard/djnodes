@@ -53,13 +53,13 @@ var table = $('#results').DataTable({
         },
         {
             data: 'entity',
-            // "width": "10%",
+            "width": "20%",
             "defaultContent": "",
             className: "entity"
         },
         {
             data: 'type',
-            // "width": "10%",
+            "width": "15%",
             "defaultContent": "",
             className: "type"
         },
@@ -73,7 +73,8 @@ var table = $('#results').DataTable({
             data: 'relations',
             // "width": "20%",
             "defaultContent": "",
-            className: "relationships"
+            className: "relationships",
+            "visible": false
         },
         {
             data: 'links.self',
@@ -186,13 +187,13 @@ var coseLayout = {
     // Excludes the label when calculating node bounding boxes for the layout algorithm
     nodeDimensionsIncludeLabels: false,
     // Randomize the initial positions of the nodes (true) or use existing positions (false)
-    randomize: false,
+    randomize: true,
     // Extra spacing between components in non-compound graphs
-    componentSpacing: 10,
+    componentSpacing: 20,
     // Node repulsion (non overlapping) multiplier
     nodeRepulsion: function( node ){ return 400000; },
     // Node repulsion (overlapping) multiplier
-    nodeOverlap: 10,
+    nodeOverlap: 100,
     // Ideal edge (non nested) length
     idealEdgeLength: function( edge ){ return 10; },
     // Divisor to compute edge forces
@@ -779,13 +780,10 @@ function getInfo(apiObj) {
             break;
 
         case "funds":
-            var entity = apiObj.attributes.name.company_name;
-            if (apiObj.attributes.name.alternate_names) {
-                entity += "(" + apiObj.attributes.name.alternate_names.familiar + ")";
-            }
+            var entity = apiObj.attributes.name.fund_name;
             return {
                 entity: entity,
-                description: ""
+                description: apiObj.attributes.amount
             };
             break;
 
@@ -939,7 +937,7 @@ $("#graphBtn, #reGraphBtn").on("click", function() {
     }
 });
 
-cy.nodes().on('tap', function(evt){
+cy.on('click', "node", function(evt){
     if ( !$("#chkOnTheGo").is(":checked") ) {
         return false;
     }
