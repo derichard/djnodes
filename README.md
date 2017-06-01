@@ -30,4 +30,6 @@ One can also select multiple rows and draw several graphs at once. If there is a
 ![Graph](/public/images/find-multiple.jpg)
 ![Graph](/public/images/graph-multiple.jpg)
 
- 
+# Credits
+The code for drawing the graph was inspired by the tutorial http://blog.js.cytoscape.org/2016/07/04/social-network/ written by Joseph Stahl. Thank you Gustavo & Natalie for testing the app.
+
