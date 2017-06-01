@@ -32,12 +32,13 @@ var table = $('#results').DataTable({
         searchPlaceholder: "Filter"
     },
     "order": [
-        [3, 'desc']
+        [7, "desc"], [3, 'desc']
     ],
     "orderCellsTop": true,
     "dom": "rtip",
     // stateSave: true,
-    columns: [{
+    columns: [
+        {
             data: 'id',
             // "width": "5%",
             "defaultContent": "",
@@ -82,12 +83,15 @@ var table = $('#results').DataTable({
             "defaultContent": "",
             className: "self",
             "visible": false
-        }
+        },
+        {
+            data: 'isSelected',
+            // "width": "5%",
+            "defaultContent": false,
+            className: "isSelected",
+            "visible": false
+        },
     ]
-});
-
-$('#filter').keyup(function(){
-      table.search($(this).val()).draw();
 });
 
 var cy = cytoscape({
@@ -167,9 +171,11 @@ var cy = cytoscape({
 var coseLayout = {
     name: 'cose',
     // Called on `layoutready`
-    ready: $('#graphSpinner').hide(),
+    ready: function() {},
     // Called on `layoutstop`
-    stop: $('#graphSpinner').hide(),
+    stop: function() {
+        $('#graphSpinner').hide();
+    },
     // Whether to animate while running the layout
     animate: false,
     // The layout animates only after this many milliseconds
@@ -181,7 +187,7 @@ var coseLayout = {
     // Whether to fit the network view after when done
     fit: true,
     // Padding on fit
-    padding: 20,
+    padding: 30,
     // Constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
     boundingBox: undefined,
     // Excludes the label when calculating node bounding boxes for the layout algorithm
@@ -189,13 +195,13 @@ var coseLayout = {
     // Randomize the initial positions of the nodes (true) or use existing positions (false)
     randomize: true,
     // Extra spacing between components in non-compound graphs
-    componentSpacing: 20,
+    componentSpacing: 1,
     // Node repulsion (non overlapping) multiplier
     nodeRepulsion: function( node ){ return 400000; },
     // Node repulsion (overlapping) multiplier
     nodeOverlap: 100,
     // Ideal edge (non nested) length
-    idealEdgeLength: function( edge ){ return 10; },
+    idealEdgeLength: function( edge ){ return 100; },
     // Divisor to compute edge forces
     edgeElasticity: function( edge ){ return 100; },
     // Nesting factor (multiplier) to compute ideal edge length for nested edges
@@ -216,12 +222,11 @@ var coseLayout = {
 
 var gridLayout = {
     name: 'grid',
-
     fit: true, // whether to fit the viewport to the graph
     padding: 30, // padding used on fit
     boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
     avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
-    avoidOverlapPadding: 10, // extra spacing around nodes when avoidOverlap: true
+    avoidOverlapPadding: 100, // extra spacing around nodes when avoidOverlap: true
     nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
     spacingFactor: undefined, // Applies a multiplicative factor (>0) to expand or compress the overall area that the nodes take up
     condense: false, // uses all available space on false, uses minimal space on true
@@ -232,8 +237,10 @@ var gridLayout = {
     animate: false, // whether to transition the node positions
     animationDuration: 500, // duration of animation in ms if enabled
     animationEasing: undefined, // easing of animation if enabled
-    ready: $('#graphSpinner').hide(), // callback on layoutready
-    stop: $('#graphSpinner').hide() // callback on layoutstop
+    ready: function() {}, // callback on layoutready
+    stop: function() {
+        $('#graphSpinner').hide();
+    }, // callback on layoutstop
 };
 
 var concentricLayout = {
@@ -260,56 +267,79 @@ var concentricLayout = {
     animate: false, // whether to transition the node positions
     animationDuration: 500, // duration of animation in ms if enabled
     animationEasing: undefined, // easing of animation if enabled
-    ready: $('#graphSpinner').hide(), // callback on layoutready
-    stop: $('#graphSpinner').hide() // callback on layoutstop
+    ready: function() {}, // callback on layoutready
+    stop: function() {
+        $('#graphSpinner').hide();
+    }, // callback on layoutstop
 };
 
 var coseBilkentLayout = {
     name: "cose-bilkent",
-  // Called on `layoutready`
-  ready: function () {
+    // Called on `layoutready`
+    ready: function () {
       $('#graphSpinner').hide();
-  },
-  // Called on `layoutstop`
-  stop: function () {
+    },
+    // Called on `layoutstop`
+    stop: function () {
       $('#graphSpinner').hide();
-  },
-  // number of ticks per frame; higher is faster but more jerky
-  refresh: 30,
-  // Whether to fit the network view after when done
-  fit: true,
-  // Padding on fit
-  padding: 20,
-  // Padding for compounds
-  paddingCompound: 5,
-  // Whether to enable incremental mode
-  randomize: true,
-  // Node repulsion (non overlapping) multiplier
-  nodeRepulsion: 4500,
-  // Ideal edge (non nested) length
-  idealEdgeLength: 50,
-  // Divisor to compute edge forces
-  edgeElasticity: 0.45,
-  // Nesting factor (multiplier) to compute ideal edge length for nested edges
-  nestingFactor: 0.1,
-  // Gravity force (constant)
-  gravity: 0.25,
-  // Maximum number of iterations to perform
-  numIter: 2500,
-  // For enabling tiling
-  tile: true,
-  // Type of layout animation. The option set is {'during', 'end', false}
-  animate: 'end',
-  // Represents the amount of the vertical space to put between the zero degree members during the tiling operation(can also be a function)
-  tilingPaddingVertical: 10,
-  // Represents the amount of the horizontal space to put between the zero degree members during the tiling operation(can also be a function)
-  tilingPaddingHorizontal: 10,
-  // Gravity range (constant) for compounds
-  gravityRangeCompound: 1.5,
-  // Gravity force (constant) for compounds
-  gravityCompound: 1.0,
-  // Gravity range (constant)
-  gravityRange: 3.8
+    },
+    // number of ticks per frame; higher is faster but more jerky
+    refresh: 30,
+    // Whether to fit the network view after when done
+    fit: true,
+    // Padding on fit
+    padding: 100,
+    // Padding for compounds
+    paddingCompound: 5,
+    // Whether to enable incremental mode
+    randomize: true,
+    // Node repulsion (non overlapping) multiplier
+    nodeRepulsion: 4500,
+    // Ideal edge (non nested) length
+    idealEdgeLength: 100,
+    // Divisor to compute edge forces
+    edgeElasticity: 0.45,
+    // Nesting factor (multiplier) to compute ideal edge length for nested edges
+    nestingFactor: 0.1,
+    // Gravity force (constant)
+    gravity: 0.25,
+    // Maximum number of iterations to perform
+    numIter: 2500,
+    // For enabling tiling
+    tile: true,
+    // Type of layout animation. The option set is {'during', 'end', false}
+    animate: 'end',
+    // Represents the amount of the vertical space to put between the zero degree members during the tiling operation(can also be a function)
+    tilingPaddingVertical: 10,
+    // Represents the amount of the horizontal space to put between the zero degree members during the tiling operation(can also be a function)
+    tilingPaddingHorizontal: 10,
+    // Gravity range (constant) for compounds
+    gravityRangeCompound: 1.5,
+    // Gravity force (constant) for compounds
+    gravityCompound: 1.0,
+    // Gravity range (constant)
+    gravityRange: 3.8
+};
+
+var breadthLayout = {
+  name: 'breadthfirst',
+  fit: true, // whether to fit the viewport to the graph
+  directed: false, // whether the tree is directed downwards (or edges can point in any direction if false)
+  padding: 30, // padding on fit
+  circle: false, // put depths in concentric circles if true, put depths top down if false
+  spacingFactor: 1.75, // positive spacing factor, larger => more space between nodes (N.B. n/a if causes overlap)
+  boundingBox: undefined, // constrain layout bounds; { x1, y1, x2, y2 } or { x1, y1, w, h }
+  avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
+  nodeDimensionsIncludeLabels: false, // Excludes the label when calculating node bounding boxes for the layout algorithm
+  roots: undefined, // the roots of the trees
+  maximalAdjustments: 0, // how many times to try to position the nodes in a maximal way (i.e. no backtracking)
+  animate: false, // whether to transition the node positions
+  animationDuration: 500, // duration of animation in ms if enabled
+  animationEasing: undefined, // easing of animation if enabled
+  ready: undefined, // callback on layoutready
+  stop: function() {
+      $('#graphSpinner').hide();
+  } // callback on layoutstop
 };
 
 function qtipText(node) {
@@ -479,7 +509,7 @@ function apiObjToCyEle(apiObj, level, sourceId) {
             break;
 
         case "rounds":
-            eleObj.data.parent = sourceId;
+            // eleObj.data.parent = sourceId; //could be used to create compund nodes for rounds
             eleObj.data.name = apiObj.attributes.round_type.description;
             eleObj.data.bg = "#000d1a"
             break;
@@ -867,6 +897,7 @@ $("#searchForm").on("submit", function() {
         }
     }
     $("#firstName, #lastName, #organization").removeClass("warning");
+    $("#filter").val("").change();
     $("#tablePanel").collapse("show");
     $('#tableSpinner').show();
 
@@ -941,13 +972,10 @@ cy.on('click', "node", function(evt){
     if ( !$("#chkOnTheGo").is(":checked") ) {
         return false;
     }
-    console.log(evt.target);
     if (evt.target.data("type") == "intro") {
         return false;
     }
-    // console.log( 'tap ' + evt.target.id() );
     var source = evt.target;
-    // console.log(source);
     var options = {
         maxLevel: 1,
         layout: coseLayout,
@@ -998,6 +1026,24 @@ $("#radioOrganization").on("click", function() {
     }
 });
 
+$('#filter').on("keyup change", function() {
+    table.search($(this).val()).draw();
+});
+
+$("#results tbody").on("click", "tr", function() {
+    var id = table.row(this).id(true);
+    if (typeof id == "undefined") {
+        return false;
+    }
+    if ( $(this).hasClass('selectedRow') ) {
+        $(this).removeClass('selectedRow');
+        table.cell( id, ".isSelected" ).data(false);
+    } else {
+        $(this).addClass('selectedRow');
+        table.cell( id, ".isSelected" ).data(true);
+    }
+});
+
 $("#resetTableBtn").on("click", function() {
     table.clear().draw();
 });
@@ -1016,32 +1062,36 @@ $("#fitBtn").on("click", function() {
 });
 
 $("#layoutCoseBtn").on("click", function() {
+    $('#graphSpinner').show();
     cy.layout(coseLayout).run();
     cy.center();
 });
 
 $("#layoutGridBtn").on("click", function() {
+    $('#graphSpinner').show();
     cy.layout(gridLayout).run();
     cy.center();
 });
 
 $("#layoutConcentricBtn").on("click", function() {
+    $('#graphSpinner').show();
     cy.layout(concentricLayout).run();
     cy.center();
 });
 
 $("#layoutCoseBilkentBtn").on("click", function() {
+    $('#graphSpinner').show();
     cy.layout(coseBilkentLayout).run();
     cy.center();
 });
 
-$("#results tbody").on("click", "tr", function() {
-    if ($(this).hasClass('selectedRow')) {
-        $(this).removeClass('selectedRow');
-    } else {
-        $(this).addClass('selectedRow');
-    }
+$("#layoutBreadthBtn").on("click", function() {
+    $('#graphSpinner').show();
+    cy.layout(breadthLayout).run();
+    cy.center();
 });
+
+
 
 $(".btn-control").on("click", function() {
     var action = $(this).attr('data-action');

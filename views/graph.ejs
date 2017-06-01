@@ -84,15 +84,14 @@
         <div id="tablePanel" class="panel-collapse collapse in">
             <div class="panel-body">
                 <div class="row">
-                    <input id="filter" type="search" placeholder="Filter">
-                    <div id="tableBtn" class="btn-group">
-                        <button id="clearTableBtn" class="btn btn-default">Clear</button>
-                        <button id="resetTableBtn" class="btn btn-default">Reset</button>
-                    </div>
+                        <input id="filter" type="search" placeholder="Filter">
+                        <button id="graphBtn" class="btn btn-default ">Graph Selection</button>
+                        <div id="tableBtn" class="btn-group">
+                            <button id="clearTableBtn" class="btn btn-default">Clear</button>
+                            <button id="resetTableBtn" class="btn btn-default">Reset</button>
+                        </div>
                 </div>
-                <div class="row">
-                    <button id="graphBtn" class="btn btn-default ">Graph Selection</button>
-                </div>
+
             </div>
 
             <div id="tableSpinner">
@@ -108,6 +107,7 @@
                         <th class="description">Description</th>
                         <th class="relationships">Relationships</th>
                         <th class="self">Link</th>
+                        <th class="isSelected">Selected</th>
                     </thead>
                     <tbody></tbody>
                 </table>
@@ -144,6 +144,7 @@
                                 <li><a id="layoutGridBtn" href="#graphPanel">Grid</a></li>
                                 <li><a id="layoutConcentricBtn" href="#graphPanel">Concentric</a></li>
                                 <li><a id="layoutCoseBilkentBtn" href="#graphPanel">Cose-Bilkent</a></li>
+                                <li><a id="layoutBreadthBtn" href="#graphPanel">Breadthfirst</a></li>
                             </ul>
                         </div>
                         <div id="levelBtn" class="btn-group">
