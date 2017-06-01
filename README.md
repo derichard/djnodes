@@ -2,7 +2,7 @@
 Graphs for Dow Jones DNA
 
 # Description
-DJ Nodes is a web application which makes use of the Data APIs offered by Dow Jones DNA. The idea is to turn this data into graphs using the http://js.cytoscape.org/ library. The results of a search are displayed using the https://datatables.net/ framework. Currently the application can only search for data on VentureSource, more data points pending implementation.
+DJ Nodes is a node.js web application which makes use of the Data APIs offered by Dow Jones DNA. The idea is to turn this data into graphs using the http://js.cytoscape.org/ library. The results of a search are displayed using the https://datatables.net/ framework. Currently the application can only search for data on VentureSource, more data points pending implementation.
 
 # Installation
 Pull the repository and install it locally using the npm package manager.
