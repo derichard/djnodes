@@ -9,13 +9,26 @@ var url = require('url');
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
 
+function handleError(error, res, sess) {
+    if (error[0].code == 1011007) {
+        sess.authZtoken = undefined;
+        sess.authZtoken = undefined;
+        res.status(401).json(error);
+    } else {
+        res.status(500).json(error);
+    }
+}
+
 function hasAuthNtoken(req, res, next) {
     // console.log("starting hasAuthNtoken function");
     var sess = req.session;
     // console.log("sess:", sess);
-    sess.authNtoken = {
-        id_token: process.env.authN
-        };
+
+    //for development only
+    // sess.authNtoken = {
+    //     id_token: process.env.authN
+    //     };
+
     if (sess.authNtoken !== undefined) {
         return next();
     } else {
@@ -27,9 +40,12 @@ function hasAuthZtoken(req, res, next) {
     // console.log("starting hasauthZtoken function");
     var sess = req.session;
     // console.log("sess:", sess);
-    sess.authZtoken = {
-        id_token: process.env.id_token
-        };
+
+    //for development only
+    // sess.authZtoken = {
+    //     id_token: process.env.id_token
+    //     };
+
     //console.log(sess.authZtoken.id_token)
     if (sess.authZtoken !== undefined) {
         return next();
@@ -43,8 +59,8 @@ function hasAuthZtoken(req, res, next) {
                 client_id: process.env.CLIENT_ID,
                 scope: "openid pib",
                 grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
-                redirect_uri: "http://localhost:8000/"
-                // redirect_uri: "https://djnodes.herokuapp.com/"
+                // redirect_uri: "http://localhost:8000/"
+                redirect_uri: "https://djnodes.herokuapp.com/"
                 }
             }, (e, r, authZbody) => {
                 if (e || r.statusCode !== 200) {
@@ -54,16 +70,12 @@ function hasAuthZtoken(req, res, next) {
                     // process.exit();
                 } else {
                     sess.authZtoken = authZbody;
-                    console.log("authZ token received:", sess.authZtoken);
+                    // console.log("authZ token received:", sess.authZtoken);
                     res.redirect("/");
                 }
             });
     }
 }
-
-// router.get('/', hasAuthNtoken, hasAuthZtoken, function(req, res, next) {
-//     res.render('test');
-// });
 
 router.get('/', hasAuthNtoken, hasAuthZtoken, function(req, res, next) {
     res.render('index', {
@@ -84,8 +96,8 @@ router.post("/login", function(req, res, next) {
     var qs = {
         scope: "openid given_name family_name email",
         response_type: "code",
-        redirect_uri: "http://localhost:8000/callback",
-        // redirect_uri: "https://djnodes.herokuapp.com/callback",
+        // redirect_uri: "http://localhost:8000/callback",
+        redirect_uri: "https://djnodes.herokuapp.com/callback",
         connection: "dj-oauth",
         client_id: client_id
     }
@@ -113,11 +125,11 @@ router.get("/callback*", function(req, res, next) {
             code: code,
             client_id: client_id,
             client_secret: client_secret,
-            redirect_uri: "http://localhost:8000/"
-            // redirect_uri: "https://djnodes.herokuapp.com"
+            // redirect_uri: "http://localhost:8000/"
+            redirect_uri: "https://djnodes.herokuapp.com"
             }
         }, (e, r, authNbody) => {
-            if (e || r.statusCode !== 200) {
+            if (e || res.statusCode !== 200) {
                 console.log("authN err:", e, "status code:", r.statusCode);
                 console.log("authN err:", authNbody);
                 sess.authNtoken = undefined;
@@ -128,7 +140,7 @@ router.get("/callback*", function(req, res, next) {
                 //console.log(body);
                 var sess = req.session;
                 sess.authNtoken = authNbody;
-                console.log("authN token received:", sess.authNtoken);
+                // console.log("authN token received:", sess.authNtoken);
                 res.redirect("/");
             }
         });
@@ -179,11 +191,8 @@ router.get("/api/search/people*", hasAuthNtoken, hasAuthZtoken, function(req, re
     }, (e, r, apiData) => {
         if (e || r.statusCode !== 200) {
             console.log("search err:", e, "status code:", r.statusCode);
-            console.log("api/search err:", apiData);
-            sess.authNtoken = undefined;
-            sess.authZtoken = undefined;
-            res.redirect("/login");
-            // process.exit();
+            console.log("api/search err:", apiData, res.session);
+            handleError(apiData.errors, res, sess);
         } else {
             // console.log(JSON.stringify(apiData, null, 4));
             res.json(apiData);
@@ -277,7 +286,7 @@ router.get("/api/search/organizations*", hasAuthNtoken, hasAuthZtoken, function(
         if (e || r.statusCode !== 200) {
             console.log("search err:", e, "status code:", r.statusCode);
             console.log("search err:", apiData);
-            res.json(apiData);
+            handleError(apiData.errors, res, sess);
             // process.exit();
         } else {
             res.json(apiData);
@@ -304,8 +313,7 @@ router.get("/api/people", hasAuthNtoken, hasAuthZtoken, function(req, res, next)
         if (e || r.statusCode !== 200) {
             console.log("search err:", e, "status code:", r.statusCode);
             console.log("api/people err:", apiData);
-            res.json(apiData);
-            // res.redirect("/login");
+            handleError(apiData.errors, res, sess);
             // process.exit();
         } else {
             // console.log(JSON.stringify(apiData, null, 4));
@@ -332,7 +340,7 @@ router.get("/api/organizations", hasAuthNtoken, hasAuthZtoken, function(req, res
         if (e || r.statusCode !== 200) {
             console.log("search err:", e, "status code:", r.statusCode);
             console.log("api/organizations err:", apiData);
-            res.json(apiData);
+            handleError(apiData.errors, res, sess);
             // process.exit();
         } else {
             // console.log(JSON.stringify(apiData, null, 4));

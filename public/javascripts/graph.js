@@ -540,7 +540,8 @@ function getObjByLink(link) {
     });
 }
 
-//Array of links to fetch; the results of these are arrays of apiObjs
+//@params targetLinks: array of links to fetch
+//return: arrays of apiObjs
 function getTargets(targetLinks, filter) {
 
     //helper function to filter out unwanted searches
@@ -566,7 +567,7 @@ function getTargets(targetLinks, filter) {
         return false;
     }
 
-    console.log("getTargets targetLinks:", targetLinks);
+    // console.log("getTargets targetLinks:", targetLinks);
     var targetPromises = [];
     targetLinks.forEach( (link) => {
         if (filterLink(link, filter)) {
@@ -595,13 +596,13 @@ function getTargets(targetLinks, filter) {
         });
 }
 
-//source: source node, targets: array of apiObjs
+//source: source: node, targets: array of apiObjs
 function addToGraph(source, targets, level) {
     var sourceId = source.id();
-    console.log("sourceId:", sourceId);
+    // console.log("sourceId:", sourceId);
     cy.batch(function() {
         targets.forEach( (target) => {
-            console.log("target:", target);
+            // console.log("target:", target);
             if (cy.$id(target.id).empty()) {
                 // console.log("addToGraph target:", target);
                 // console.log("addToGraph apiObjToCyEle:", apiObjToCyEle(target, level + 1) );
@@ -767,9 +768,12 @@ function searchPeopleByName(formData, offset) {
             }
         })
         .catch( (error) => {
+            if (error.status == 401) {
+                $(window).attr('location','/login');
+            }
             table.draw();
             console.log("error:", error);
-            return error;
+            $('#tableSpinner').hide();
         });
 }
 
@@ -868,7 +872,12 @@ function searchOrganizationByName(organization, type, offset) {
             table.draw();
         })
         .catch( (error) => {
+            if (error.status == 401) {
+                $(window).attr('location','/login');
+            }
             console.log("error:", error);
+            $('#tableSpinner').hide();
+            table.draw();
         });
 }
 
@@ -883,7 +892,7 @@ $("#searchForm").on("submit", function() {
         funds: $("#chkSearchFunds").is(':checked'),
         limitedPartners: $("#chkSearchLP").is(':checked')
     };
-    console.log(formData);
+    // console.log(formData);
     if ($("#radioPeople").hasClass("active")) {
         if (formData.firstName.length == 0 || formData.lastName.length == 0) {
             $("#firstName").addClass("warning");
@@ -910,7 +919,6 @@ $("#searchForm").on("submit", function() {
         $("#resultsCount").text("0");
         organizationTypes.forEach( (type) => {
             if (formData[type]) {
-                console.log("type:", type);
                 searchOrganizationByName(formData.organization, type, 0);
             }
         });
