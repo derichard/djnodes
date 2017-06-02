@@ -4,25 +4,6 @@ $(document).ready(function() {
 var tableData = {};
 var linkData = {};
 
-// function generateRandomGraph(numberOfNodes){
-//     var elements = [];
-//     var bg = ["#00b3b3", "#ff6600", "#1a8cff", "#996600", "#9900ff", "#669999", "#000d1a"]
-//     for (var i = 0; i < numberOfNodes; i++) {
-//         elements.push({
-//             data: {
-//                 id: i,
-//                 level: 0,
-//                 bg: bg[Math.floor(Math.random() * bg.length)]
-//             }
-//         });
-//     }
-//     for (var i = 0; i < numberOfNodes; )
-//     var maxEdges = Math.floor(Math.random() * numberOfNodes * 3);
-//     for (var i = 0; i < maxEdges; i++) {
-//         var source = Math.floor(Math.random() * numberOfNodes);
-//     }
-// }
-
 //todo: if using fcodes, handle id properly
 var table = $('#results').DataTable({
     // "lengthMenu": [[5, 100, 500, -1], [50, 100, 500, "All"]],
