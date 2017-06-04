@@ -422,14 +422,58 @@ function qtipText(node) {
 }
 
 //extract links from apiObj
+// function extractLinks(apiObj) {
+//     var links = [];
+//     var relationships = apiObj.relationships;
+//     for (var key in relationships) {
+//         if (relationships.hasOwnProperty(key)) {
+//             links.push(relationships[key].links.related);
+//         }
+//     }
+//     return links;
+// }
+
 function extractLinks(apiObj) {
     var links = [];
-    var relationships = apiObj.relationships;
-    for (var key in relationships) {
-        if (relationships.hasOwnProperty(key)) {
-            links.push(relationships[key].links.related);
-        }
+    var type = apiObj.type;
+    var id = apiObj.id;
+    // console.log("apiObj links", apiObj);
+
+    switch (type) {
+        case "people":
+            links.push("https://api.dowjones.com/people/" + id + "/organizations");
+            break;
+
+        case "portfolio-companies":
+            links.push("https://api.dowjones.com/organizations/portfolio-companies/" + id + "/executives");
+            links.push("https://api.dowjones.com/organizations/portfolio-companies/" + id + "/investors");
+            links.push("https://api.dowjones.com/organizations/portfolio-companies/" + id + "/service-providers");
+            links.push("https://api.dowjones.com/organizations/portfolio-companies/" + id + "/rounds");
+            break;
+
+        case "investors":
+            links.push("https://api.dowjones.com/organizations/investors/" + id + "/executives");
+            links.push("https://api.dowjones.com/organizations/investors/" + id + "/service-providers");
+            links.push("https://api.dowjones.com/organizations/investors/" + id + "/limited-partners");
+            links.push("https://api.dowjones.com/organizations/investors/" + id + "/funds");
+            links.push("https://api.dowjones.com/organizations/investors/" + id + "/portfolio-companies");
+            break;
+
+        case "service-providers":
+            links.push("https://api.dowjones.com/organizations/service-providers/" + id + "/executives");
+            links.push("https://api.dowjones.com/organizations/service-providers/" + id + "/portfolio-companies");
+            links.push("https://api.dowjones.com/organizations/service-providers/" + id + "/investors");
+            break;
+
+        case "funds":
+            break;
+
+        case "limited-partners":
+            links.push("https://api.dowjones.com/organizations/limited-partners/" + id + "/investors");
+            break;
     }
+    // console.log("links", links)
+
     return links;
 }
 
@@ -486,7 +530,7 @@ function apiObjToCyEle(apiObj, level, sourceId) {
 
         case "limited-partners":
             eleObj.data.name = apiObj.attributes.name.company_name;
-            eleObj.data.bg = "#669999"
+            eleObj.data.bg = "#d1e0e0"
             break;
 
         case "rounds":
@@ -512,7 +556,7 @@ function getObjByLink(link) {
                 console.log("Error getObjByLink:", apiObj.title);
                 reject(apiObj.errors);
             } else {
-                //console.log("getObjByLink success:", apiObj);
+                console.log("getObjByLink success:", apiObj);
                 //store data received from search for link in global variable
                 linkData[link] = apiObj;
                 resolve(apiObj);
@@ -548,7 +592,7 @@ function getTargets(targetLinks, filter) {
         return false;
     }
 
-    // console.log("getTargets targetLinks:", targetLinks);
+    console.log("getTargets targetLinks:", targetLinks);
     var targetPromises = [];
     targetLinks.forEach( (link) => {
         if (filterLink(link, filter)) {
@@ -562,7 +606,7 @@ function getTargets(targetLinks, filter) {
     });
     return Promise.all(targetPromises)
         .then( (then) => {
-            console.log("getTargets success:", then);
+            // console.log("getTargets success:", then);
             var targets = [];
             then.forEach( (targetList) => {
                 targetList.data.forEach( (apiObj) => {
@@ -832,7 +876,7 @@ function searchOrganizationByName(organization, type, offset) {
             console.log(resultsCount);
             $("#resultsCount").text(apiData.meta.count + resultsCount + " result(s)");
             apiData.data.forEach( (org) => {
-                if (table.rows("#" + org.id).any()) {
+                if (table.rows("#" + org.id).any() && org.type == table.cell("#" + org.id, ".type").data() ) {
                     console.log("row exists");
                 } else {
                     var addInfo = getInfo(org);

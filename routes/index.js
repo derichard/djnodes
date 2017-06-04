@@ -70,7 +70,7 @@ function hasAuthZtoken(req, res, next) {
                     // process.exit();
                 } else {
                     sess.authZtoken = authZbody;
-                    // console.log("authZ token received:", sess.authZtoken);
+                    console.log("authZ token received:", sess.authZtoken);
                     res.redirect("/");
                 }
             });
