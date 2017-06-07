@@ -439,6 +439,11 @@ function extractLinks(apiObj) {
     var id = apiObj.id;
     // console.log("apiObj links", apiObj);
 
+    //test id if write-in investors which have no relationships
+    if (!/^[0-9]+$/.test(id)) {
+        return links;
+    }
+
     switch (type) {
         case "people":
             links.push("https://api.dowjones.com/people/" + id + "/organizations");
@@ -545,23 +550,24 @@ function apiObjToCyEle(apiObj, level, sourceId) {
 
 function getObjByLink(link) {
     // console.log("link:", link);
-    return new Promise((resolve, reject) => {
-        if (link.match(/people/i)) {
-            var url = "/api/people";
-        } else {
-            var url = "/api/organizations"
-        }
-        $.getJSON(url, {link: link}, function(apiObj) {
-            if (apiObj.errors) {
-                console.log("Error getObjByLink:", apiObj.title);
-                reject(apiObj.errors);
-            } else {
-                console.log("getObjByLink success:", apiObj);
+    if (link.match(/people/i)) {
+        var url = "/api/people";
+    } else {
+        var url = "/api/organizations"
+    }
+    return new Promise( (resolve, reject) => {
+        $.getJSON(url, {link: link})
+            .then( (apiObj) => {
+                // console.log("getObjByLink success:", apiObj);
                 //store data received from search for link in global variable
                 linkData[link] = apiObj;
                 resolve(apiObj);
-            }
-        });
+            })
+            .catch( (error) => {
+                console.log("Error getObjByLink:", error);
+                //also resolve with an empty apiObj since we want the Promise.all to wait until all are settled
+                resolve({data: []});
+            });
     });
 }
 
@@ -592,7 +598,7 @@ function getTargets(targetLinks, filter) {
         return false;
     }
 
-    console.log("getTargets targetLinks:", targetLinks);
+    // console.log("getTargets targetLinks:", targetLinks);
     var targetPromises = [];
     targetLinks.forEach( (link) => {
         if (filterLink(link, filter)) {
@@ -606,14 +612,13 @@ function getTargets(targetLinks, filter) {
     });
     return Promise.all(targetPromises)
         .then( (then) => {
-            // console.log("getTargets success:", then);
+            console.log("getTargets success:", then);
             var targets = [];
             then.forEach( (targetList) => {
                 targetList.data.forEach( (apiObj) => {
                     targets.push(apiObj);
                 });
             });
-            // console.log("getTargets final targets:", targets);
             return targets;
         })
         .catch( (error) => {
@@ -873,7 +878,7 @@ function searchOrganizationByName(organization, type, offset) {
         .then( (apiData) => {
             console.log("success:", apiData);
             var resultsCount = parseInt( $("#resultsCount").text() );
-            console.log(resultsCount);
+            // console.log(resultsCount);
             $("#resultsCount").text(apiData.meta.count + resultsCount + " result(s)");
             apiData.data.forEach( (org) => {
                 if (table.rows("#" + org.id).any() && org.type == table.cell("#" + org.id, ".type").data() ) {
